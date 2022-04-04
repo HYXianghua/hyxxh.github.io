@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh">
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    button {
+        background-color: #4CAF50; /* Green */
+        border: 0;
+        color: white;
+        width: 70vw;
+        padding: 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 40px;
+    }
+
+    h2 {
+        font-size: 60px;
+    }
+
+    #main {
+        margin: 20% auto;
+        padding: 100px;
+        text-align: center;
+    }
+
+    .no {
+        background-color: #ffaaaa
+
+    }
+
+    .yes {
+        background-color: #aaffaa;
+    }
+
+</style>
+<body style="width: 100vw;height: 100vh">
+<div id="main" v-bind:class="{ yes: isYes,no:isNo}">
+    <h2> {{counter}}%</h2>
+    <p>
+        <button v-on:click="bt(0)">{{ xx[0] }}</button>
+    </p>
+    <p>
+        <button v-on:click="bt(1)">{{ xx[1] }}</button>
+    </p>
+    <p>
+        <button v-on:click="bt(2)">{{ xx[2] }}</button>
+    </p>
+    <p>
+        <button v-on:click="bt(3)">{{ xx[3] }}</button>
+    </p>
+    <p>
+        <button style="background-color: red" v-on:click="nx">下一题</button>
+    </p>
+</div>
+</body>
+<script>
+    function sjs(a, b) {
+        let fm = Math.random() * (b - a)
+        return fm + a
+    }
+
+    function newSzToFm() {
+        let fm = sjs(3, 20)
+        let n = 1 / fm
+        return [(n * 100).toFixed(2), fm]
+    }
+
+    function newXx(zq) {
+        let dan = Math.floor(sjs(0, 4))
+        let m = dan
+        let sz = [0, 0, 0, 0, 0]
+
+        for (let i = 0; i < 4; i++) {
+            m++
+            m %= 4
+            sz[m] = zq + dan - m
+        }
+        sz[4] = dan
+        return sz
+    }
+
+    let xuanx = 0
+    let daan = 0
+
+    function getZuiJing(dan) {
+        let zs = Math.floor(dan)
+
+        let a = zs
+        let b = (zs + 1)
+
+        let da = 1 / a - 1 / dan
+        let db = 1 / dan - 1 / b
+
+        return (da > db) ? b : a
+    }
+
+    function newT() {
+        let tm = newSzToFm()
+
+        xuanx = getZuiJing(tm[1])
+        let xx = newXx(xuanx)
+
+        for (let i = 0; i < 4; i++) {
+            app.xx[i] = "1/" + xx[i]
+        }
+        daan = xx[4]
+        console.log(daan + 1, xuanx)
+        app.counter = tm[0]
+        app.isYes = false
+        app.isNo = false
+    }
+
+    var app = new Vue({
+        el: '#main',
+        data: {
+            counter: 0,
+            xx: [],
+            isYes: false,
+            isNo: false,
+        },
+
+        methods: {
+            bt: function (msg) {
+                msg = parseInt(msg)
+                if (msg == daan) {
+                    app.isYes = true
+                    app.isNo = false
+
+                } else {
+                    app.isYes = false
+                    app.isNo = true
+                }
+                Vue.set(app.xx, daan, "1/" + xuanx + "=" + (1 / parseInt(xuanx) * 100).toFixed(1) + "%")
+            },
+
+            nx: function (event) {
+                newT()
+            }
+        }
+    })
+    newT()
+
+</script>
+</html>
